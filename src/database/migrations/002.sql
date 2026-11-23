@@ -1,0 +1,10 @@
+CREATE TABLE role_panels(id INTEGER PRIMARY KEY,guild TEXT NOT NULL REFERENCES guild_settings,title TEXT NOT NULL,config TEXT NOT NULL,channel TEXT NOT NULL,message TEXT);
+CREATE INDEX role_panel_message ON role_panels(guild,message);
+CREATE TABLE sent_embeds(guild TEXT NOT NULL,message TEXT NOT NULL,channel TEXT NOT NULL,name TEXT NOT NULL,PRIMARY KEY(guild,message));
+CREATE TABLE security_locks(guild TEXT NOT NULL,channel TEXT NOT NULL,previous INTEGER,PRIMARY KEY(guild,channel));
+CREATE TABLE deliveries(key TEXT PRIMARY KEY,guild TEXT NOT NULL,channel TEXT NOT NULL,message TEXT NOT NULL,created INTEGER NOT NULL);
+CREATE INDEX strike_lookup ON strikes(guild,user,active);
+CREATE INDEX voice_period ON voice_sessions(guild,last_seen,user);
+CREATE INDEX mod_case_lookup ON moderation_cases(guild,user,id);
+CREATE INDEX giveaways_due ON giveaways(state,ends);
+CREATE INDEX polls_due ON polls(state,ends);

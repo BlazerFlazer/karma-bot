@@ -1,0 +1,25 @@
+{
+  "name": "karma-system",
+  "version": "2.0.0",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=22.16.0"
+  },
+  "scripts": {
+    "start": "node --max-old-space-size=132 src/index.js",
+    "dev": "node --watch src/index.js",
+    "deploy:commands": "node scripts/deploy.js",
+    "migrate": "node scripts/database.js migrate",
+    "backup": "node scripts/database.js backup",
+    "check": "node scripts/check.js",
+    "test": "node --test",
+    "test:ui": "node scripts/check-control-ui.js",
+    "control:preview": "node scripts/preview-control.js",
+    "measure": "node scripts/measure.js"
+  },
+  "dependencies": {
+    "discord.js": "14.28.1",
+    "dotenv": "17.4.2"
+  }
+}

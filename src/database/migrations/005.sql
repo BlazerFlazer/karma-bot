@@ -1,0 +1,13 @@
+CREATE TABLE control_grants(guild TEXT NOT NULL REFERENCES guild_settings,role TEXT NOT NULL,permissions TEXT NOT NULL,revision INTEGER NOT NULL DEFAULT 1,PRIMARY KEY(guild,role));
+CREATE TABLE control_sessions(hash TEXT PRIMARY KEY,guild TEXT NOT NULL,user TEXT NOT NULL,profile TEXT NOT NULL,expires INTEGER NOT NULL);
+CREATE INDEX control_sessions_expiry ON control_sessions(expires);
+CREATE TABLE control_states(hash TEXT PRIMARY KEY,expires INTEGER NOT NULL);
+CREATE TABLE control_drafts(id TEXT PRIMARY KEY,guild TEXT NOT NULL REFERENCES guild_settings,owner TEXT NOT NULL,kind TEXT NOT NULL CHECK(kind IN ('ticket','embed','tier')),title TEXT NOT NULL,body TEXT NOT NULL,shared TEXT NOT NULL DEFAULT '[]',state TEXT NOT NULL DEFAULT 'personal',version INTEGER NOT NULL DEFAULT 1,created INTEGER NOT NULL,updated INTEGER NOT NULL);
+CREATE INDEX control_draft_list ON control_drafts(guild,updated,id);
+CREATE TABLE control_publications(id TEXT PRIMARY KEY,guild TEXT NOT NULL REFERENCES guild_settings,draft TEXT NOT NULL REFERENCES control_drafts,version INTEGER NOT NULL,channel TEXT NOT NULL,message TEXT,actor TEXT NOT NULL,status TEXT NOT NULL,updated INTEGER NOT NULL,UNIQUE(draft,version,channel));
+CREATE TABLE control_previews(id TEXT PRIMARY KEY,guild TEXT NOT NULL,user TEXT NOT NULL,draft TEXT NOT NULL REFERENCES control_drafts,version INTEGER NOT NULL,channel TEXT NOT NULL,payload TEXT NOT NULL,expires INTEGER NOT NULL);
+CREATE TABLE control_preferences(guild TEXT NOT NULL REFERENCES guild_settings,user TEXT NOT NULL,config TEXT NOT NULL,PRIMARY KEY(guild,user));
+CREATE TABLE control_notes(id INTEGER PRIMARY KEY,ticket INTEGER NOT NULL REFERENCES tickets ON DELETE CASCADE,actor TEXT NOT NULL,body TEXT NOT NULL,created INTEGER NOT NULL);
+CREATE TABLE control_reads(guild TEXT NOT NULL,user TEXT NOT NULL,event INTEGER NOT NULL REFERENCES audit_logs ON DELETE CASCADE,PRIMARY KEY(guild,user,event));
+CREATE INDEX control_actor_feed ON audit_logs(guild,actor,id);
+CREATE INDEX control_target_feed ON audit_logs(guild,target,id);
